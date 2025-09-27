@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Sign Up</h2>
+  <form method="post" autocomplete="off">
+    {% csrf_token %}
+    {{ form.username.label_tag }} {{ form.username }}<br>
+    {{ form.role.label_tag }}<br>
+    {{ form.role }}<br>
+    {{ form.team.label_tag }}
+    <input name="team" id="id_team" list="team-list" class="form-control" placeholder="Enter or select team">
+    <datalist id="team-list">
+      {% for t in teams %}
+        <option value="{{ t.name }}">{{ t.name }}</option>
+      {% endfor %}
+    </datalist>
+    <small class="text-muted">Team leads can create new teams. Members must join an existing team.</small><br>
+    {{ form.password1.label_tag }} {{ form.password1 }}<br>
+    <ul id="pw-rules" class="list-unstyled mb-3">
+      <li id="rule-length" class="text-danger"><span>✗</span> At least 8 characters</li>
+      <li id="rule-upper" class="text-danger"><span>✗</span> Contains uppercase letter</li>
+      <li id="rule-lower" class="text-danger"><span>✗</span> Contains lowercase letter</li>
+      <li id="rule-digit" class="text-danger"><span>✗</span> Contains a digit</li>
+      <li id="rule-special" class="text-danger"><span>✗</span> Contains a special character</li>
+    </ul>
+    {{ form.password2.label_tag }} {{ form.password2 }}<br>
+    <button type="submit" class="btn btn-success mt-2">Sign Up</button>
+  </form>
+  <p>Already have an account? <a href="/accounts/login/">Login</a></p>
+  <script>
+    const pwInput = document.getElementById('id_password1');
+    const rules = [
+      {id: 'rule-length', test: pw => pw.length >= 8},
+      {id: 'rule-upper', test: pw => /[A-Z]/.test(pw)},
+      {id: 'rule-lower', test: pw => /[a-z]/.test(pw)},
+      {id: 'rule-digit', test: pw => /\d/.test(pw)},
+      {id: 'rule-special', test: pw => /[^A-Za-z0-9]/.test(pw)},
+    ];
+    if (pwInput) {
+      pwInput.addEventListener('input', function() {
+        const pw = pwInput.value;
+        rules.forEach(rule => {
+          const el = document.getElementById(rule.id);
+          if (rule.test(pw)) {
+            el.classList.remove('text-danger');
+            el.classList.add('text-success');
+            el.querySelector('span').textContent = '✓';
+          } else {
+            el.classList.remove('text-success');
+            el.classList.add('text-danger');
+            el.querySelector('span').textContent = '✗';
+          }
+        });
+      });
+    }
+  </script>
+{% endblock %}

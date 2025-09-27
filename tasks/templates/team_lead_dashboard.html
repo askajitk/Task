@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4">Team Lead Dashboard</h2>
+  <div class="row mb-4">
+    <div class="col-12 col-lg-8">
+      <div class="card mb-3">
+        <div class="card-header bg-primary text-white">Assign New Task</div>
+        <form method="post" class="p-3">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-success">Assign Task</button>
+        </form>
+      </div>
+      <div class="row">
+        {% for card in member_cards %}
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+          <div class="card h-100">
+            <div class="card-header bg-info text-white">{{ card.profile.user.username }}</div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush mb-2">
+                <li class="list-group-item">Total tasks: <span class="badge bg-primary">{{ card.summary.total }}</span></li>
+                <li class="list-group-item">Completed: <span class="badge bg-success">{{ card.summary.completed }}</span></li>
+                <li class="list-group-item">Pending: <span class="badge bg-warning text-dark">{{ card.summary.pending }}</span></li>
+              </ul>
+              <a href="/dashboard/member/{{ card.profile.user.id }}/" class="btn btn-outline-primary w-100">Details</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="card mb-3">
+        <div class="card-header bg-success text-white">Your Task Summary</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Total tasks: <span class="badge bg-primary">{{ lead_summary.total }}</span></li>
+          <li class="list-group-item">Completed: <span class="badge bg-success">{{ lead_summary.completed }}</span></li>
+          <li class="list-group-item">Pending: <span class="badge bg-warning text-dark">{{ lead_summary.pending }}</span></li>
+        </ul>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header bg-dark text-white">Your Task Completion Calendar</div>
+        <div class="calendar-heatmap" style="display: grid; grid-template-columns: repeat(7, 20px); gap: 2px; justify-content: center;">
+          {% for day in heatmap %}
+            <div title="{{ day.date }}: {{ day.count }} completed" style="width: 20px; height: 20px; background-color: {{ day.color }}; border-radius: 3px;"></div>
+            {% if forloop.counter|divisibleby:7 %}<br>{% endif %}
+          {% endfor %}
+        </div>
+        <small class="text-muted">Green intensity shows number of completed tasks per day (last 30 days).</small>
+      </div>
+      <form method="get" class="mb-3">
+        <div class="row g-2">
+          <div class="col">
+            <label class="form-label">Start Date</label>
+            <input type="date" name="start_date" value="{{ start_date }}" class="form-control">
+          </div>
+          <div class="col">
+            <label class="form-label">End Date</label>
+            <input type="date" name="end_date" value="{{ end_date }}" class="form-control">
+          </div>
+          <div class="col d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-primary">Filter</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

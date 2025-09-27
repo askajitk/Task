@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Task Details: {{ member.user.username }}</h2>
+  <div class="card mb-3">
+    <div class="card-header bg-info text-white">Task List</div>
+    <ul class="list-group list-group-flush">
+      {% for task in tasks %}
+        <li class="list-group-item">
+          <strong>{{ task.title }}</strong><br>
+          <span class="badge bg-secondary">{{ task.status|title }}</span>
+          <span class="text-muted">Assigned by: {{ task.assigned_by.username }}</span>
+          <span class="text-muted">Created: {{ task.created_at|date:'Y-m-d' }}</span>
+          {% if task.completed_at %}<span class="text-success">Completed: {{ task.completed_at|date:'Y-m-d' }}</span>{% endif %}
+        </li>
+      {% empty %}
+        <li class="list-group-item">No tasks for this member.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <a href="/dashboard/" class="btn btn-outline-primary">Back to Dashboard</a>
+</div>
+{% endblock %}

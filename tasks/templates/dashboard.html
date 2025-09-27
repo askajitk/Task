@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-3">
+  <div class="col-12 col-md-8">
+    <div class="card mb-3">
+      <div class="card-header bg-primary text-white">Add Your Task</div>
+      <form method="post" class="p-3">
+        {% csrf_token %}
+        <div class="mb-2">
+          <input type="text" name="title" class="form-control" placeholder="Task title" required>
+        </div>
+        <div class="mb-2">
+          <textarea name="description" class="form-control" placeholder="Task description"></textarea>
+        </div>
+        <button type="submit" name="add_task" class="btn btn-success">Add Task</button>
+      </form>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header bg-success text-white">Pending Tasks</div>
+      <ul class="list-group list-group-flush">
+        {% for task in pending_tasks %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ task.title }}</span>
+            <form method="post" action="" class="d-inline">{% csrf_token %}
+              <button class="btn btn-sm btn-outline-success" name="complete" value="{{ task.id }}">Mark Completed</button>
+            </form>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No pending tasks.</li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header bg-secondary text-white">Completed Tasks</div>
+      <ul class="list-group list-group-flush">
+        {% for task in completed_tasks %}
+          <li class="list-group-item">{{ task.title }} <span class="badge bg-success">{{ task.completed_at|date:'Y-m-d' }}</span></li>
+        {% empty %}
+          <li class="list-group-item">No completed tasks.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-12 col-md-4">
+    <div class="card mb-3">
+      <div class="card-header bg-info text-white">Summary</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Total tasks: <span class="badge bg-primary">{{ summary.total }}</span></li>
+        <li class="list-group-item">Completed: <span class="badge bg-success">{{ summary.completed }}</span></li>
+        <li class="list-group-item">Pending: <span class="badge bg-warning text-dark">{{ summary.pending }}</span></li>
+      </ul>
+    </div>
+    <div class="card mb-3">
+      <div class="card-header bg-dark text-white">Task Completion Calendar</div>
+      <div class="calendar-heatmap" style="display: grid; grid-template-columns: repeat(7, 20px); gap: 2px; justify-content: center;">
+        {% for day in heatmap %}
+          <div title="{{ day.date }}: {{ day.count }} completed" style="width: 20px; height: 20px; background-color: {{ day.color }}; border-radius: 3px;"></div>
+          {% if forloop.counter|divisibleby:7 %}<br>{% endif %}
+        {% endfor %}
+      </div>
+      <small class="text-muted">Green intensity shows number of completed tasks per day (last 30 days).</small>
+    </div>
+  </div>
+</div>
+{% endblock %}
