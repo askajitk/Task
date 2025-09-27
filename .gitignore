@@ -1,0 +1,76 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# VS Code
+.vscode/
+
+# Python
+*.pyo
+*.pyd
+*.env
+.env*
+
+# Virtualenv
+venv/
+ENV/
+.env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Other
+*.sqlite3
+*.db
+*.bak
+*.swp
+*.swo
+
+# Node
+node_modules/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Test
+.tox/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Pipenv
+Pipfile.lock
+
+# Misc
+*.tmp
+*.temp
+*.orig
+*.rej
+
+# Git
+*.orig
+*.rej
+
+# Sentry
+.sentryclirc
